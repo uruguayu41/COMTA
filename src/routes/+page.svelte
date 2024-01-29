@@ -1,4 +1,6 @@
 <script>
+// @ts-nocheck
+
   import {
     getFirestore,
     collection,
@@ -29,10 +31,9 @@
         document.cookie = "id=" + userData.CI;
         document.cookie = "rol=" + userData.ROL;
         localStorage.setItem("isAuthenticated", "true");
-        if(userData.ROL == "EVALUADOR"){
+        if (userData.ROL == "EVALUADOR") {
           window.location.href = "/evaluar";
-        }
-        else if (userData.ROL == "ADMINISTRADOR"){
+        } else if (userData.ROL == "ADMINISTRADOR") {
           window.location.href = "/administrar";
         }
       });
@@ -46,22 +47,29 @@
   }
 </script>
 
-
-
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ingreso Evaluuadores COMTA</title>
-    <link rel="icon" href="/favicon.png" type="image/png">
+    <link rel="icon" href="/favicon.png" type="image/png" />
     <link
       href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
       rel="stylesheet"
     />
   </head>
   <div class="flex justify-center bg-green-900">
-    <img src="logo.png" alt="Logo COMTA" class="w-1/2">
+    <img src="logo.png" alt="Logo COMTA" class="w-1/2" />
   </div>
+  <div class="flex justify-end">
+    <button
+      class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+      onclick="window.location.href = '/ayuda'"
+    >
+      Ayuda
+    </button>
+  </div>
+
   <body>
     <nav
       class="bg-[#FAA21A] h-[80x] w-full flex justify-between items-center px-4"
@@ -85,15 +93,15 @@
             placeholder="Contraseña"
             bind:value={password}
           />
-        </div><button
+        </div>
+        <button
           class="bg-green-600 text-white text-25 font-semibold px-6 py-3 rounded-md mb-4"
           on:click={verificarLogin}
         >
           INICIAR SESIÓN
         </button>
       </div>
-    </main><script
-      src="https://cdn.tailwindcss.com/2.2.19/tailwind.min.js"
-    ></script>
+    </main>
+    <script src="https://cdn.tailwindcss.com/2.2.19/tailwind.min.js"></script>
   </body>
 </html>

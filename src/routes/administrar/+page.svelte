@@ -9,7 +9,14 @@
     getDocs,
     updateDoc,
   } from "firebase/firestore";
-  import { firebaseApp, storage, ref, listAll, deleteObject, getMetadata } from "./../../firebase";
+  import {
+    firebaseApp,
+    storage,
+    ref,
+    listAll,
+    deleteObject,
+    getMetadata,
+  } from "./../../firebase";
   import { onMount } from "svelte";
 
   const db = getFirestore(firebaseApp);
@@ -203,35 +210,34 @@
   }
 
   async function eliminarEvaluacionEvaluador(id, fecha) {
-  const listRef = ref(storage);
-  const listResult = await listAll(listRef);
-  const matchingFiles = listResult.items.filter((itemRef) => {
-    const fileName = getMetadata(itemRef);
-    return fileName;
-  });
-
-  if (matchingFiles.length > 0) {
-    const storageRef = matchingFiles[0];
-    await deleteObject(storageRef).then(() => {
+    const listRef = ref(storage);
+    const listResult = await listAll(listRef);
+    const matchingFiles = listResult.items.filter((itemRef) => {
+      const fileName = getMetadata(itemRef);
+      return fileName;
     });
-    const querySnapshot = await getDocs(collection(db, "EVALUADORES"));
-    for (const doc of querySnapshot.docs) {
-      if (doc.data().CI === evaluador_seleccionado.CI) {
-        let evaluaciones = doc.data().EVALUACIONES_COMPLETADAS;
-        evaluaciones = evaluaciones.filter(
-          (element) => !element.includes(id) && !element.includes(fecha)
-        );
-        await updateDoc(doc.ref, {
-          EVALUACIONES_COMPLETADAS: evaluaciones,
-        });
+
+    if (matchingFiles.length > 0) {
+      const storageRef = matchingFiles[0];
+      await deleteObject(storageRef).then(() => {});
+      const querySnapshot = await getDocs(collection(db, "EVALUADORES"));
+      for (const doc of querySnapshot.docs) {
+        if (doc.data().CI === evaluador_seleccionado.CI) {
+          let evaluaciones = doc.data().EVALUACIONES_COMPLETADAS;
+          evaluaciones = evaluaciones.filter(
+            (element) => !element.includes(id) && !element.includes(fecha)
+          );
+          await updateDoc(doc.ref, {
+            EVALUACIONES_COMPLETADAS: evaluaciones,
+          });
+        }
       }
+      alert("Evaluación eliminada con exito");
+      window.location.reload();
+    } else {
+      alert("No se encontró la evaluación con el ID y fecha especificados");
     }
-    alert("Evaluación eliminada con exito");
-    window.location.reload();
-  } else {
-    alert("No se encontró la evaluación con el ID y fecha especificados");
   }
-}
 
   function closeModalEvaluador() {
     empleados_asignados = [];
@@ -524,12 +530,20 @@
       <div class="flex justify-center bg-green-900">
         <img src="logo.png" alt="Logo COMTA" class="w-1/2" />
       </div>
-      <button
-        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded float-right"
+      <div class="flex justify-end">
+        <button
+          class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
+          onclick="window.location.href = '/ayuda/administrar'"
+        >
+          Ayuda
+        </button>
+        <button
+        class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
         on:click={cerrarSesion}
       >
         Cerrar Sesión
       </button>
+      </div>
       <br /><br /><br />
       <div class="w-3/10 mx-auto text-center text-green-800">
         <h1 class="text-4xl font-bold border-b-2 border-gray-500 pb-2">

@@ -24,7 +24,7 @@
     </style>
   </head>
   <div class="flex justify-center bg-green-900 top-0">
-    <img src="logo.png" alt="Logo COMTA" class="w-1/2" />
+    <img src="/logo.png" alt="Logo COMTA" class="w-1/2" />
   </div>
   <body>
     <div class="bg-green-800 w-screen h-20 flex items-center justify-center">

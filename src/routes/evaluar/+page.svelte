@@ -844,13 +844,20 @@
           >
             EVALUADOR- ID: {evaluador_logueado.CI} NOMBRE: {evaluador_logueado.NOMBRE}
           </h1>
-          <button
-            id="btnCerrarSesion"
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded float-right"
+          <div class="flex justify-end">
+            <button
+              class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded mr-4"
+              onclick="window.location.href = '/ayuda/evaluador'"
+            >
+              Ayuda
+            </button>
+            <button
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
             on:click={cerrarSesion}
           >
             Cerrar Sesión
           </button>
+          </div>
         </div>
       </header>
     </body>
