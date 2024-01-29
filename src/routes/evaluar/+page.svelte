@@ -139,8 +139,8 @@
 
   async function guardarEvaluacion() {
     if (validarDatos()) {
-      await crearPDF();
-      await eliminarEvaluado();
+      await Promise.all([crearPDF(), eliminarEvaluado()]);
+      window.location.reload();
     }
   }
 
@@ -727,7 +727,6 @@
       document.getElementById("pregunta17").scrollIntoView();
       return;
     }
-    alert("hola");
     return true;
   }
   async function crearPDF() {
@@ -755,7 +754,8 @@
     var margin = 1;
     var scale =
       (doc.internal.pageSize.width - margin * 2) / document.body.scrollWidth;
-    doc.html(document.body, {
+
+    await doc.html(document.body, {
       x: margin,
       y: margin,
       html2canvas: {
@@ -763,14 +763,12 @@
         letterRendering: true,
       },
     });
-    setTimeout(async () => {
-      const pdfBytes = doc.output("arraybuffer");
-      const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
-      const storageRef = ref(storage, nombre_pdf);
-      await uploadBytes(storageRef, pdfBlob);
-      const url = await getDownloadURL(storageRef);
-      agregarEvaluacionCompletada(url);
-    }, 2000);
+    const pdfBytes = doc.output("arraybuffer");
+    const pdfBlob = new Blob([pdfBytes], { type: "application/pdf" });
+    const storageRef = ref(storage, nombre_pdf);
+    await uploadBytes(storageRef, pdfBlob);
+    const url = await getDownloadURL(storageRef);
+    await agregarEvaluacionCompletada(url);
   }
 
   async function agregarEvaluacionCompletada(url) {

@@ -9,7 +9,7 @@
     getDocs,
     updateDoc,
   } from "firebase/firestore";
-  import { firebaseApp } from "./../../firebase";
+  import { firebaseApp, storage, ref, listAll, deleteObject, getMetadata } from "./../../firebase";
   import { onMount } from "svelte";
 
   const db = getFirestore(firebaseApp);
@@ -182,13 +182,56 @@
     evaluador_seleccionado.EVALUACIONES_COMPLETADAS.forEach((ev) => {
       const id = ev.split("/").pop().split(".pdf")[0].split("_")[0];
       const date = ev.split("/").pop().split(".pdf")[0].split("_")[2];
-      stringInsert += `<a href="${ev}" class="text-green-500 hover:text-green-700">ID evaluado: ${id} Fecha: ${date}</a>`;
+      stringInsert += `<button class="flex items-center space-x-2">`;
+      stringInsert += `  <a href="${ev}" class="text-green-500 hover:text-green-700">ID evaluado: ${id} Fecha: ${date}</a>`;
+      stringInsert += `  <button class="bg-green-500 text-white px-2 py-1 rounded hover:bg-green-700 eliminar-button" data-id="${id}" data-date="${date}">Eliminar</button>`;
+      stringInsert += `</button>`;
     });
     stringInsert += `</div>`;
     document
       .getElementById("modalEv")
       .insertAdjacentHTML("beforeend", stringInsert);
+
+    const eliminarButtons = document.querySelectorAll(".eliminar-button");
+    eliminarButtons.forEach((button) => {
+      button.addEventListener("click", async (event) => {
+        const id = event.target.dataset.id;
+        const fecha = event.target.dataset.date;
+        await eliminarEvaluacionEvaluador(id, fecha);
+      });
+    });
   }
+
+  async function eliminarEvaluacionEvaluador(id, fecha) {
+  const listRef = ref(storage);
+  const listResult = await listAll(listRef);
+  const matchingFiles = listResult.items.filter((itemRef) => {
+    const fileName = getMetadata(itemRef);
+    return fileName;
+  });
+
+  if (matchingFiles.length > 0) {
+    const storageRef = matchingFiles[0];
+    await deleteObject(storageRef).then(() => {
+    });
+    const querySnapshot = await getDocs(collection(db, "EVALUADORES"));
+    for (const doc of querySnapshot.docs) {
+      if (doc.data().CI === evaluador_seleccionado.CI) {
+        let evaluaciones = doc.data().EVALUACIONES_COMPLETADAS;
+        evaluaciones = evaluaciones.filter(
+          (element) => !element.includes(id) && !element.includes(fecha)
+        );
+        await updateDoc(doc.ref, {
+          EVALUACIONES_COMPLETADAS: evaluaciones,
+        });
+      }
+    }
+    alert("Evaluación eliminada con exito");
+    window.location.reload();
+  } else {
+    alert("No se encontró la evaluación con el ID y fecha especificados");
+  }
+}
 
   function closeModalEvaluador() {
     empleados_asignados = [];
@@ -362,7 +405,7 @@
     let asignados = document.getElementById("lista2").innerText;
     asignados = asignados.split("\n");
     let lista_asignados = [];
-    for (let i = 1; i < asignados.length; i++) {
+    for (let i = 0; i < asignados.length; i++) {
       lista_asignados.push(asignados[i].split("_")[0]);
     }
     for (const doc of querySnapshot.docs) {
