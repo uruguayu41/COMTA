@@ -1,3 +1,18 @@
+<script>
+    import { onMount } from "svelte";
+    let cargado = false; // variable que se cambia cuando se cargan los datos
+
+
+    onMount(async () => {
+    const logueado = document.cookie.includes("logueado=true");
+    const rol = document.cookie.includes("rol=ADMINISTRADOR");
+    if (logueado && rol) {
+      cargado = true;
+    }
+  });
+</script>
+
+{#if cargado}
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -34,9 +49,9 @@
       class="w-full max-w-md mx-auto mt-10 p-4 bg-green-900 rounded-lg shadow-md"
     >
       <p class="text-white text-lg">
-        En esta página se encuentra la información referente a inicio de sesión,
-        luego cada perfil podrá acceder a la información necesaria para conocer
-        todas las funcionalidades disponibles.
+        En esta página se encuentra la información referente a las
+        funcionalidades que se pueden realizar como administrador del sistema de
+        evaluaciones COMTA.
       </p>
     </div>
 
@@ -44,39 +59,82 @@
       <h2 class="text-xl font-bold mb-4">TABLA DE CONTENIDO:</h2>
       <ul>
         <li>
-          <a
-            href="#¿Para que sirve esta página?"
-            class="block py-1 hover:bg-gray-300">¿Para que sirve esta página?</a
+          <a href="#Pantalla inicial" class="block py-1 hover:bg-gray-300"
+            >Pantalla inicial</a
           >
         </li>
         <li>
-          <a href="#¿Cómo ingresar?" class="block py-1 hover:bg-gray-300"
-            >¿Cómo ingresar?</a
+          <a href="#Evaluadores" class="block py-1 hover:bg-gray-300"
+            >Evaluadores</a
+          >
+        </li>
+        <li>
+          <a href="#Empleados" class="block py-1 hover:bg-gray-300"
+            >Empleados</a
           >
         </li>
       </ul>
     </div>
     <div id="content">
       <h2
-        id="¿Para que sirve esta página?"
+        id="Pantalla Inicial"
         class="text-2xl font-bold mt-4 mb-2"
       >
-        ¿Para que sirve esta página?
+      Pantalla inicial
       </h2>
       <p>
-        Esta web de diseñó como aplicación de evaluación. Pretende brindar un entorno amigable para los evaluadores y gestores.
-        Con esta aplicación podrás crear evaluaciones, asignar evaluadores y gestionar las evaluaciones.
-        Cada evaluador puede ingresar con las credenciales asignadas y completar todas las evaluaciones que se las ha asigna.
+        Al ingresar con su usuario y contraseña, visualizará la siguiente pantalla:
+        <img src="/ayuda/pantalla_inicial_admin.png" alt="">
+        La primer tabla de la pantalla "Evaluadores" muestra todas aquellas personas que se han asignado como evaluadores.
+        En la parte superior de la tabla cuenta con un buscador, podrá ingresar un nombre y se actualizará la tabla de evaluadores buscando dicha persona dentro de los evaluadores.
+        La segunda tabla muestra todas las personas en el sistema (todoos aquellos que trabajan en la organización). También cuenta con un buscador en la parte superior de la tabla para buscar cualquier empleado.
+        En la parte inferior de la página se puede ver un botón "Nuevo empleado" para crear un nuevo usuario en el sistema.
       </p>
-      <br>
-      <h2 id="¿Cómo ingresar?" class="text-2xl font-bold mt-4 mb-2">
-        ¿Cómo ingresar?
+      <br />
+      <h2 id="Evaluadores" class="text-2xl font-bold mt-4 mb-2">
+        Evaluadores
       </h2>
       <p>
-        Para ingresar al sistema, según el rol que se le ha asignado, deberá ingresar sus credenciales en la pantalla anterior.
-        Si se ha olvidado de sus credenciales o cree que hay algun error en la información, contacte con el administrador.
-        <br><br>
-        <img class="mx-20%" src="/ayuda/pantalla_login.png" alt="Descripción de la imagen">      </p>
+        Puede seleccionar cualquier evaluador en la tabla presionando sobre él. Al hacerlo se mostrará una pantalla como la siguiente:
+        <br />
+        <img
+          class="mx-20%"
+          src="/ayuda/tabla_evaluadores.png"
+          alt="Descripción de la imagen"
+        />
+        En esta pantalla se puede visualizar en la parte superior el id y nombre del evaluador, seguido de su contraseña entre parentesis.
+        Puedes utilizar el buscador para buscar en la tabla de "No asignados", son todas las personas que se puede asignar a este evaluador seleccionado para que complete su evaluación.
+        En la tabla derecha "Asignados" puedes ver todas las personas que se encuentran asignadas, por lo que este evaluador deberá completar sus evaluaciones y las tiene pendientes.
+        Con las flechas que se encuentran en medio de ambas tablas podrá pasar personas de una tabla a otra, dependiendo si deben ser evaluadas por esta persona o no.
+        No es posible pasar personas desde "Asignados" a "No asignados" inmediatamente después de haberlas tranferido a la tabla "Asignados", deberá guardar los cambios antes, o recargar la página si desdea no guardar los cambios actuales y volver a comenzar.
+        Abajo de las tablas podrá ver los botones:
+        "Eliminar evaluador"; Este botón elimina a esta persona como evaluador, se mantiene como trabajador de la organización, pero ya no será evaluador.
+        "Guardar cambios": Este botón actualiza los cambios que se realizaron.
+        "Cerrar": Este botón cierra la pantalla actual y verá la pantalla inicial.
+
+        Debajo de todo, verá una sección llamada "EVALUACIONES COMPLETADAS", aquí verá todas las evaluaciones que ya se han completado por parte de este evaluador, podrá seleccionar y ver una evaluación o eliminarla.
+      </p>
+      <h2 id="Empleados" class="text-2xl font-bold mt-4 mb-2">
+        Empleados
+      </h2>
+      <p>
+        La segunda tabla de la pantalla inicial es la tabla de "Empleados", puedes ver a todos los empleados que se encuentran en el sistema.
+        <img src="/ayuda/tabla_empleados.png" alt="">
+        Puede buscar uno especificamente por nombre, sector o identificador. Al seleccionar una persona, verá una pantalla como la siguiente:
+        <img src="/ayuda/menu_empleado.png" alt="">
+        Verá una pantalla con el id del empleado y su nombre.
+        Abajo de esta información, verá los siguientes botones:
+        "Eliminar empleado": Este botón elimina a esta persona del sistema.
+        "Editar datos": Este botón abre un formulario para editar los datos de la persona.
+        "Convertir a evaluador": Este botón convierte a la persona en evaluador (Se le asignará un usuario y una contraseña que se mostrarán por pantalla. El usuario es su identificador, la contraseña se genera de forma aleatoria).
+        "Cerrar": Este botón cierra la pantalla actual y verá la pantalla inicial.
+
+        Al final de la página encontrará un botón "Nuevo empleado", al seleccioar este botón verá la siguiente pantalla:
+        <img src="/ayuda/pantalla_nuevo_empleado.png" alt="">
+        En esta pantalla se puede crear un nuevo usuario en el sistema.
+        Deberá ingresar su nombre completo, identificador único de empleado  y el sector al que pertenece.
+        <br /><br />
     </div>
   </body>
 </html>
+{/if}
