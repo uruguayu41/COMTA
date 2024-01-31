@@ -109,9 +109,9 @@
         <p>
           Al inicio de la página, verá un menú desplegable, al lado de
           "Seleccione una persona a evaluar". Deberá presionar el menú
-          desplegable y se mostrarán todas las personas que tiene pendinetes de
+          desplegable y se mostrarán todas las personas que tiene pendientes de
           evaluar. Deberá seleccionar que persona va a evaluar en este momento,
-          luego de seleccionada la persona, se rellenarán automaticamente los
+          luego de seleccionada la persona, se rellenarán automáticamente los
           campos de información:
           <br />
           <img
@@ -127,7 +127,7 @@
           Completar evaluación
         </h2>
         <p>
-          Deberá rellenar la tabla completamente, (no olvidar que solo debe completar un campo por fila en la columna que aplique el concepto a su criterio, asignandu un puntaje en el intervalo).
+          Deberá rellenar la tabla completamente, (no olvidar que solo debe completar un campo por fila en la columna que aplique el concepto a su criterio, asignando un puntaje en el intervalo).
           Al final de la tabla podrá visualizar los puntos totales asignados y los puntos promedio que se le ha asignado al evaluado.
           <img src="/ayuda/puntos.png" alt="">
           <br>

@@ -138,10 +138,12 @@
   }
 
   async function guardarEvaluacion() {
-    if (validarDatos()) {
-      await Promise.all([crearPDF(), eliminarEvaluado()]);
-      window.location.reload();
-    }
+    await Promise.all([crearPDF(), eliminarEvaluado()]);
+    window.location.reload();
+    // if (validarDatos()) {
+    //   await Promise.all([crearPDF(), eliminarEvaluado()]);
+    //   window.location.reload();
+    // }
   }
 
   function validarDatos() {
@@ -852,11 +854,12 @@
               Ayuda
             </button>
             <button
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
-            on:click={cerrarSesion}
-          >
-            Cerrar Sesión
-          </button>
+              id="btnCerrarSesion"
+              class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+              on:click={cerrarSesion}
+            >
+              Cerrar Sesión
+            </button>
           </div>
         </div>
       </header>

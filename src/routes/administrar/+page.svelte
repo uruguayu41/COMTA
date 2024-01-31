@@ -135,7 +135,6 @@
           nuevo_empleado
         );
         alert("Empleado creado con exito");
-        closeModalNuevoEmpleado();
         window.location.reload();
       } catch (error) {
         console.log(error);
