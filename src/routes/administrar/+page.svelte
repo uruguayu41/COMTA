@@ -186,7 +186,7 @@
       `<div class="flex justify-center space-x-4">`;
 
     evaluador_seleccionado.EVALUACIONES_COMPLETADAS.forEach((ev) => {
-      const id = ev.split("/").pop().split(".pdf")[0].split("_")[0];
+      const id = ev.split("/").pop().split(".pdf")[0].split("_")[1];
       const date = ev.split("/").pop().split(".pdf")[0].split("_")[2];
       stringInsert += `<button class="flex items-center space-x-2">`;
       stringInsert += `  <a href="${ev}" class="text-green-500 hover:text-green-700">ID evaluado: ${id} Fecha: ${date}</a>`;

@@ -138,12 +138,10 @@
   }
 
   async function guardarEvaluacion() {
-    await Promise.all([crearPDF(), eliminarEvaluado()]);
-    window.location.reload();
-    // if (validarDatos()) {
-    //   await Promise.all([crearPDF(), eliminarEvaluado()]);
-    //   window.location.reload();
-    // }
+    if (validarDatos()) {
+      await Promise.all([crearPDF(), eliminarEvaluado()]);
+      window.location.reload();
+    }
   }
 
   function validarDatos() {
@@ -745,9 +743,9 @@
       .toString()
       .padStart(2, "0")}-${anio}`;
     const nombre_pdf =
-      evaluador_logueado.CI +
+      evaluador_logueado.CI + 
       "_" +
-      empleado_evaluado_actual.CI +
+      empleado_evaluado_actual.CI + empleado_evaluado_actual.NOMBRE +
       "_" +
       fechaFormateada +
       "_" +
