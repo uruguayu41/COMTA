@@ -742,7 +742,7 @@
     const fechaFormateada = `${dia.toString().padStart(2, "0")}-${mes
       .toString()
       .padStart(2, "0")}-${anio}`;
-    const nombre_pdf =
+    let nombre_pdf =
       evaluador_logueado.CI + 
       "_" +
       empleado_evaluado_actual.CI + empleado_evaluado_actual.NOMBRE +
@@ -1780,7 +1780,7 @@
         <div class="flex justify-center space-x-4">
           {#each evaluador_logueado.EVALUACIONES_COMPLETADAS as ev}
             <a href={ev} class="text-green-500 hover:text-green-700"
-              >ID evaluado: {ev.split("/").pop().split(".pdf")[0].split("_")[1]}
+              >ID evaluado: {ev.split("/").pop().split(".pdf")[0].split("_")[1].replaceAll("%20"," ")}
               Fecha:
               {ev.split("/").pop().split(".pdf")[0].split("_")[2]}</a
             >
