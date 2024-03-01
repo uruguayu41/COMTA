@@ -22,6 +22,7 @@
   let puntos_subtotal_c3 = 0;
   let puntos_subtotal_c4 = 0;
   let puntos_total = 0; // puntaje total
+  let promedio = 0;
   let inputs = null;
 
   onMount(async () => {
@@ -105,6 +106,7 @@
     puntos_subtotal_c3 = 0;
     puntos_subtotal_c4 = 0;
     puntos_total = 0;
+    promedio = 0;
     for (let i = 1; i <= 16; i++) {
       try {
         const valor = parseInt(document.getElementById(`p${i}-${1}`).value);
@@ -138,6 +140,7 @@
       } catch (error) {}
     }
     puntos_total = puntos_subtotal_c1 + puntos_subtotal_c2 + puntos_subtotal_c3 + puntos_subtotal_c4;
+    promedio = Math.round(puntos_total / 16);
   }
 
   async function guardarEvaluacion() {
@@ -958,7 +961,7 @@
             style="position: sticky; top: 0; background-color: white;"
           >
             <tr id="pregunta1">
-              <td class="p-2 border border-black w-1/5">Calidad del trabajo. Se ajusta a las normas, procedimientos y politicas existentes <span style="color: green;">[Se ajusta a las normas, procedimientos y politicas existentes]</span></td>
+              <td class="p-2 border border-black w-1/5">Calidad del trabajo. <span style="color: green;">[Se ajusta a las normas, procedimientos y politicas existentes]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p1-1"
@@ -1545,7 +1548,7 @@
               <td class="bg-green-800 text-left text-white"
                 >PROMEDIO EVALUACIÓN</td
               >
-              <td class="bg-gray-600">{puntos_total}</td>
+              <td class="bg-gray-600">{promedio}</td>
             </tr>
           </table>
         </div>
