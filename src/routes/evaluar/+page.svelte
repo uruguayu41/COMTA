@@ -17,11 +17,11 @@
   let evaluador_logueado = null; // evaluador logueado
   let empleados_asignados = []; // lista de empleados asignados al evaluador logueado
   let empleado_evaluado_actual = null; // empleado que se está evaluando actualmente
-  let puntos_desempeño = 0; // puntaje de desempeño
-  let puntos_factorhumano = 0; // puntaje de factor humano
-  let puntos_habilidades = 0; // puntaje de habilidades
+  let puntos_subtotal_c1 = 0;
+  let puntos_subtotal_c2 = 0;
+  let puntos_subtotal_c3 = 0;
+  let puntos_subtotal_c4 = 0;
   let puntos_total = 0; // puntaje total
-  let promedio_total = 0; // promedio total
   let inputs = null;
 
   onMount(async () => {
@@ -100,41 +100,44 @@
   }
 
   function calcularPuntos() {
-    puntos_desempeño = 0;
-    puntos_factorhumano = 0;
-    puntos_habilidades = 0;
-    for (let i = 1; i <= 4; i++) {
-      for (let j = 1; j <= 4; j++) {
-        try {
-          const valor = parseInt(document.getElementById(`p${i}-${j}`).value);
-          if (!isNaN(valor)) {
-            puntos_desempeño += valor;
-          }
-        } catch (error) {}
-      }
+    puntos_subtotal_c1 = 0;
+    puntos_subtotal_c2 = 0;
+    puntos_subtotal_c3 = 0;
+    puntos_subtotal_c4 = 0;
+    puntos_total = 0;
+    for (let i = 1; i <= 16; i++) {
+      try {
+        const valor = parseInt(document.getElementById(`p${i}-${1}`).value);
+        if (!isNaN(valor)) {
+          puntos_subtotal_c1 += valor;
+        }
+      } catch (error) {}
     }
-    for (let i = 5; i <= 12; i++) {
-      for (let j = 1; j <= 4; j++) {
-        try {
-          const valor = parseInt(document.getElementById(`p${i}-${j}`).value);
-          if (!isNaN(valor)) {
-            puntos_factorhumano += valor;
-          }
-        } catch (error) {}
-      }
+    for (let i = 1; i <= 16; i++) {
+      try {
+        const valor = parseInt(document.getElementById(`p${i}-${2}`).value);
+        if (!isNaN(valor)) {
+          puntos_subtotal_c2 += valor;
+        }
+      } catch (error) {}
     }
-    for (let i = 13; i <= 17; i++) {
-      for (let j = 1; j <= 4; j++) {
-        try {
-          const valor = parseInt(document.getElementById(`p${i}-${j}`).value);
-          if (!isNaN(valor)) {
-            puntos_habilidades += valor;
-          }
-        } catch (error) {}
-      }
+    for (let i = 1; i <= 16; i++) {
+      try {
+        const valor = parseInt(document.getElementById(`p${i}-${3}`).value);
+        if (!isNaN(valor)) {
+          puntos_subtotal_c3 += valor;
+        }
+      } catch (error) {}
     }
-    puntos_total = puntos_desempeño + puntos_factorhumano + puntos_habilidades;
-    promedio_total = (puntos_total / 17).toFixed(2);
+    for (let i = 1; i <= 16; i++) {
+      try {
+        const valor = parseInt(document.getElementById(`p${i}-${4}`).value);
+        if (!isNaN(valor)) {
+          puntos_subtotal_c4 += valor;
+        }
+      } catch (error) {}
+    }
+    puntos_total = puntos_subtotal_c1 + puntos_subtotal_c2 + puntos_subtotal_c3 + puntos_subtotal_c4;
   }
 
   async function guardarEvaluacion() {
@@ -253,13 +256,6 @@
       p2: document.getElementById("p16-2").value,
       p3: document.getElementById("p16-3").value,
       p4: document.getElementById("p16-4").value,
-    };
-
-    const respuestas_p17 = {
-      p1: document.getElementById("p17-1").value,
-      p2: document.getElementById("p17-2").value,
-      p3: document.getElementById("p17-3").value,
-      p4: document.getElementById("p17-4").value,
     };
 
     const validValues = {
@@ -474,19 +470,6 @@
         console.log(error);
       });
       document.getElementById("pregunta16").scrollIntoView();
-      return;
-    }
-
-    Object.keys(respuestas_p17).forEach((key) => {
-      if (!validValues[key].includes(respuestas_p17[key])) {
-        errors.push(`El valor ingresado en la pregunta 17 no es válido`);
-      }
-    });
-    if (errors.length > 0) {
-      errors.forEach((error) => {
-        console.log(error);
-      });
-      document.getElementById("pregunta17").scrollIntoView();
       return;
     }
 
@@ -713,20 +696,6 @@
       document.getElementById("pregunta16").scrollIntoView();
       return;
     }
-
-    const respuestasRellenas17 = Object.values(respuestas_p17).filter(
-      (value) => value.trim() !== ""
-    );
-    if (respuestasRellenas17.length == 0) {
-      alert("Responda a la pregunta 17");
-      document.getElementById("pregunta17").scrollIntoView();
-      return;
-    }
-    if (respuestasRellenas17.length > 1) {
-      alert("En la pregunta 17 solo puede responder una casilla");
-      document.getElementById("pregunta17").scrollIntoView();
-      return;
-    }
     return true;
   }
   async function crearPDF() {
@@ -743,9 +712,10 @@
       .toString()
       .padStart(2, "0")}-${anio}`;
     let nombre_pdf =
-      evaluador_logueado.CI + 
+      evaluador_logueado.CI +
       "_" +
-      empleado_evaluado_actual.CI + empleado_evaluado_actual.NOMBRE +
+      empleado_evaluado_actual.CI +
+      empleado_evaluado_actual.NOMBRE +
       "_" +
       fechaFormateada +
       "_" +
@@ -955,6 +925,9 @@
         </table>
       </div>
 
+      <h2 class="bg-green-800 text-white text-center text-2xl font-bold p-4">
+        CARACTERÍSTICAS
+      </h2>
       <div class="p-4 rounded text-center">
         <div class="overflow-x-auto">
           <table
@@ -979,20 +952,13 @@
             </tr>
           </table>
         </div>
-        <h2 class="bg-green-800 text-white text-center text-2xl font-bold p-4">
-          DESEMPEÑO
-        </h2>
         <div class="overflow-x-auto">
           <table
             class="table-auto w-full"
             style="position: sticky; top: 0; background-color: white;"
           >
             <tr id="pregunta1">
-              <td class="p-2 border border-black w-1/5"
-                >RESPONSABILIDAD - Grado de compromiso que asume para el
-                cumplimiento de las metas. Grado de tranquilidad que le genera a
-                su superior</td
-              >
+              <td class="p-2 border border-black w-1/5">Calidad del trabajo. Se ajusta a las normas, procedimientos y politicas existentes <span style="color: green;">[Se ajusta a las normas, procedimientos y politicas existentes]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p1-1"
@@ -1027,11 +993,7 @@
               >
             </tr>
             <tr id="pregunta2">
-              <td class="p-2 border border-black w-1/5"
-                >CALIDAD Y EXACTITUD EN EL TRABAJO - Coherencia entre el trabajo
-                solicitado y el efectivamente realizado. El trabajo realizado
-                cumple con lo requerido y además es de buena calidad</td
-              >
+              <td class="p-2 border border-black w-1/5">Consistencia en el trabajo <span style="color: green;">[Fija un correcto uso del tiempo, solidez y coherencia en sus funciones]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p2-1"
@@ -1066,11 +1028,7 @@
               >
             </tr>
             <tr id="pregunta3">
-              <td class="p-2 border border-black w-1/5"
-                >CUMPLIMIENTO DE LOS PROCEDIMIENTOS EXISTENTES - Grado de
-                cumplimiento de las normas, procedimientos y políticas
-                existentes</td
-              >
+              <td class="p-2 border border-black w-1/5">Comunicación <span style="color: green;">[Interaccion escrita, verbal, expresiones emocionales, para alcanzar la correcta comprension]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p3-1"
@@ -1105,11 +1063,7 @@
               >
             </tr>
             <tr id="pregunta4">
-              <td class="p-2 border border-black w-1/5"
-                >GRADO DE CONOCIMIENTO TÉCNICO - Conocimiento de las distintas
-                herramientas necesarias para desarrollar sus labores (
-                Programas, bases de datos, leyes, normas, sistemas, etc.)</td
-              >
+              <td class="p-2 border border-black w-1/5">Trabajo independiente <span style="color: green;">[Capacidad de tomar decisiones correctas sin requerir una mayor supervision]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p4-1"
@@ -1143,28 +1097,8 @@
                 /></td
               >
             </tr>
-          </table>
-        </div>
-        <h3 class="text-right" id="puntos_desempeño">
-          TOTAL DESEMPEÑO: {puntos_desempeño}
-        </h3>
-        <br />
-
-        <h2 class="bg-green-800 text-white text-center text-2xl font-bold p-4">
-          FACTOR HUMANO - ACTITUDES
-        </h2>
-        <div class="overflow-x-auto">
-          <table
-            class="table-auto w-full"
-            style="position: sticky; top: 0; background-color: white;"
-          >
             <tr id="pregunta5">
-              <td class="p-2 border border-black w-1/5"
-                >ACTITUD HACIA LA EMPRESA - Capacidad de defender los intereses
-                de la Empresa y adherirse a sus lineamientos. Lealtad para con
-                la Empresa. Disponibilidad para extender el horario de trabajo
-                ante una necesidad puntual</td
-              >
+              <td class="p-2 border border-black w-1/5">Toma la iniciativa <span style="color: green;">[Facilidad para avanzar ante diferentes tipos de innovacion]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p5-1"
@@ -1199,11 +1133,7 @@
               >
             </tr>
             <tr id="pregunta6">
-              <td class="p-2 border border-black w-1/5"
-                >ACTITUD HACIA LOS SUPERIORES - Relación con los superiores
-                inmediatos y no inmediatos. Reconocimiento y respeto. Lealtad,
-                sinceridad y colaboración</td
-              >
+              <td class="p-2 border border-black w-1/5">Trabajo en grupo <span style="color: green;">[Tambien capacidad de compartir conocimiento y habilidades]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p6-1"
@@ -1238,11 +1168,7 @@
               >
             </tr>
             <tr id="pregunta7">
-              <td class="p-2 border border-black w-1/5"
-                >ACTITUD HACIA LOS COMPAÑEROS - Forma en la que se maneja con
-                sus compañeros inmediatos. Camaradería. Se considera la relación
-                acorde a lo estrictamente laboral</td
-              >
+              <td class="p-2 border border-black w-1/5">Productividad <span style="color: green;">[Se evalua la cantidad de produccion realizada o la cantidad de servicios atendidos]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p7-1"
@@ -1277,11 +1203,7 @@
               >
             </tr>
             <tr id="pregunta8">
-              <td class="p-2 border border-black w-1/5"
-                >COOPERACIÓN CON EL EQUIPO - Colaboración en el desarrollo de
-                trabajos de integrantes de otros grupos. Trabajo en equipo.
-                Capacidad de compartir conocimiento y habilidades</td
-              >
+              <td class="p-2 border border-black w-1/5">Creatividad <span style="color: green;">[Ofrece alternativas innovadoras para solucionar problemas]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p8-1"
@@ -1317,12 +1239,7 @@
             </tr>
 
             <tr id="pregunta9">
-              <td class="p-2 border border-black w-1/5"
-                >CAPACIDAD DE ACEPTAR CRÍTICAS - Capacidad de recibir críticas
-                constructivas en forma abierta. Grado de adaptación a las
-                mismas. Capacidad de no ofenderse y aprovechar las críticas para
-                mejorar</td
-              >
+              <td class="p-2 border border-black w-1/5">Relaciones con los compañeros de trabajo <span style="color: green;">[Relacion acorde en lo estrictamente laboral]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p9-1"
@@ -1357,9 +1274,7 @@
               >
             </tr>
             <tr id="pregunta10">
-              <td class="p-2 border border-black w-1/5"
-                >PRESENTACIÓN PERSONAL - Manera de vestir, proligidad</td
-              >
+              <td class="p-2 border border-black w-1/5">Relaciones con los clientes <span style="color: green;">[Agilidad, precision, amabilidad y comprension son claves para la fidelizacion]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p10-1"
@@ -1394,11 +1309,7 @@
               >
             </tr>
             <tr id="pregunta11">
-              <td class="p-2 border border-black w-1/5"
-                >PREDISPOSICIÓN - Se muestra predispuesto hacia la tarea.
-                Manifiesta una actitud positiva frente a los diferentes
-                requerimientos. Entusiasmo y Motivación</td
-              >
+              <td class="p-2 border border-black w-1/5">Habilidades Técnicas <span style="color: green;">[Conocimiento de las distintas herramientas para el desarrollo de su labor]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p11-1"
@@ -1433,10 +1344,7 @@
               >
             </tr>
             <tr id="pregunta12">
-              <td class="p-2 border border-black w-1/5"
-                >ASISTENCIA AL TRABAJO - Puntualidad en horario laboral y
-                reuniones</td
-              >
+              <td class="p-2 border border-black w-1/5">Fiabilidad <span style="color: green;">[Para el buen funcionamiento se requiere de confiabilidad y credibilidad]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p12-1"
@@ -1470,28 +1378,9 @@
                 /></td
               >
             </tr>
-          </table>
-        </div>
-        <h3 class="text-right" id="puntos_desempeño">
-          TOTAL FACTOR HUMANO: {puntos_factorhumano}
-        </h3>
-        <br />
 
-        <h2 class="bg-green-800 text-white text-center text-2xl font-bold p-4">
-          HABILIDADES
-        </h2>
-        <div class="overflow-x-auto">
-          <table
-            class="table-auto w-full"
-            style="position: sticky; top: 0; background-color: white;"
-          >
             <tr id="pregunta13">
-              <td class="p-2 border border-black w-1/5"
-                >INICIATIVA Y CREATIVIDAD - Inquietud por avanzar y mejorar.
-                Facilidad para ofrecerse como ejecutor de sus propuestas. Tiene
-                empuje. Ofrece alternativas innovadoras para solucionar
-                problemas</td
-              >
+              <td class="p-2 border border-black w-1/5">Puntualidad <span style="color: green;">[Cuidado en hacer las cosas o llegar a su debido tiempo - sin retrasos]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p13-1"
@@ -1526,12 +1415,7 @@
               >
             </tr>
             <tr id="pregunta14">
-              <td class="p-2 border border-black w-1/5"
-                >RESPUESTA BAJO PRESIÓN - Capacidad de mantener la calma y
-                transmitirla a sus compañeros. Capacidad de tomar decisiones
-                correctas bajo presión. Capacidad de sacar provecho de
-                situaciones adversas. Capacidad de realización en estos casos</td
-              >
+              <td class="p-2 border border-black w-1/5">Asistencia <span style="color: green;">[Considerar las dificultades que ocasiona ausencias totales o parciales al trabajo]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p14-1"
@@ -1566,12 +1450,7 @@
               >
             </tr>
             <tr id="pregunta15">
-              <td class="p-2 border border-black w-1/5"
-                >CAPACIDAD DE MANEJAR MÚLTIPLES TAREAS - Mantiene en orden sus
-                tareas incluso cuando maneja múltiples temas. Tiempo que le
-                insume la conmutación entre un tema y el otro. Capacidad de
-                realización en estos casos</td
-              >
+              <td class="p-2 border border-black w-1/5">Seguridad y Salud Ocupacional <span style="color: green;">[Tener disciplina y asi prevenir enfermedades o accidentes laborales]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p15-1"
@@ -1606,11 +1485,7 @@
               >
             </tr>
             <tr id="pregunta16">
-              <td class="p-2 border border-black w-1/5"
-                >LIDERAZGO Y COORDINACION - Carisma, liderazgo natural,
-                capacidad de mediar en los conflictos internos y capacidad de
-                mediar en los conflictos con los clientes</td
-              >
+              <td class="p-2 border border-black w-1/5">Cuidado del Medio Ambiente <span style="color: green;">[Conducta correcta para garantizar y asegurar el buen uso de locales, materiales y servicios]</span></td>
               <td class="p-2 border border-black w-1/5"
                 ><input
                   id="p16-1"
@@ -1645,60 +1520,32 @@
               >
             </tr>
 
-            <tr id="pregunta17">
-              <td class="p-2 border border-black w-1/5"
-                >POTENCIAL Y CAPACIDAD DE APRENDIZAJE - Tiene perfil funcional.
-                Inquietud y capacidad para conocer las distintas herramientas
-                necesarias para el trabajo</td
+            <tr id="subtotal">
+              <td class="p-2 border border-black w-1/5">SUB-TOTAL</td>
+              <td class="p-2 border border-black w-1/5">{puntos_subtotal_c1}</td
               >
-              <td class="p-2 border border-black w-1/5"
-                ><input
-                  id="p17-1"
-                  type="text"
-                  class="border border-black p-2"
-                  style="width: 100%"
-                /></td
+              <td class="p-2 border border-black w-1/5">{puntos_subtotal_c2}</td
               >
-              <td class="p-2 border border-black w-1/5"
-                ><input
-                  id="p17-2"
-                  type="text"
-                  class="border border-black p-2"
-                  style="width: 100%"
-                /></td
+              <td class="p-2 border border-black w-1/5">{puntos_subtotal_c3}</td
               >
-              <td class="p-2 border border-black w-1/5"
-                ><input
-                  id="p17-3"
-                  type="text"
-                  class="border border-black p-2"
-                  style="width: 100%"
-                /></td
-              >
-              <td class="p-2 border border-black w-1/5"
-                ><input
-                  id="p17-4"
-                  type="text"
-                  class="border border-black p-2"
-                  style="width: 100%"
-                /></td
+              <td class="p-2 border border-black w-1/5">{puntos_subtotal_c4}</td
               >
             </tr>
           </table>
         </div>
-        <h3 class="text-right" id="puntos_desempeño">
-          TOTAL HABILIDADES: {puntos_habilidades}
-        </h3>
+
         <br />
         <div class="bg-green-800 text-white p-4">
           <table class="w-full table-auto">
             <tr>
-              <td class="bg-green-800 text-left text-white">PUNTAJE TOTAL</td>
+              <td class="bg-green-800 text-left text-white">TOTAL</td>
               <td class="bg-gray-600">{puntos_total}</td>
             </tr>
             <tr>
-              <td class="bg-green-800 text-left text-white">PROMEDIO TOTAL</td>
-              <td class="bg-gray-600">{promedio_total}</td>
+              <td class="bg-green-800 text-left text-white"
+                >PROMEDIO EVALUACIÓN</td
+              >
+              <td class="bg-gray-600">{puntos_total}</td>
             </tr>
           </table>
         </div>
@@ -1780,7 +1627,12 @@
         <div class="flex justify-center space-x-4">
           {#each evaluador_logueado.EVALUACIONES_COMPLETADAS as ev}
             <a href={ev} class="text-green-500 hover:text-green-700"
-              >ID evaluado: {ev.split("/").pop().split(".pdf")[0].split("_")[1].replaceAll("%20"," ")}
+              >ID evaluado: {ev
+                .split("/")
+                .pop()
+                .split(".pdf")[0]
+                .split("_")[1]
+                .replaceAll("%20", " ")}
               Fecha:
               {ev.split("/").pop().split(".pdf")[0].split("_")[2]}</a
             >
